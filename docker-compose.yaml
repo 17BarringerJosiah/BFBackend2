@@ -1,0 +1,19 @@
+services:
+  postgres-db:
+    container_name: bfbackend2
+    image: postgres # use latest official postgres version
+    restart: always
+    environment:
+      POSTGRES_USER: bfbackend2
+      POSTGRES_PASSWORD: bfbackend2
+      POSTGRES_DB: bfbackend2
+      POSTGRES_HOST_AUTH_METHOD: password
+    ports:
+      - "5434:5432"
+    volumes:
+      - ./local_data:/var/lib/postgresql/data
+
+volumes:
+  local-data:
+  postgresql_data:
+    driver: local
