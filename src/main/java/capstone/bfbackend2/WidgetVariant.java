@@ -22,12 +22,12 @@ public class WidgetVariant {
     private Widget widget;
 
     @ManyToOne (fetch = FetchType.EAGER)
-    @JoinColumn(name = "color_id")
+    @JoinColumn(name = "color_id", nullable = false)
     private Color color;
 
-    @ManyToOne
-    @JoinColumn(name = "metrics_id")
-    private WidgetMetrics widgetMetrics;
+    @Column(name = "variant_quantity")
+    private int variantQuantity;
+
 
     @Column(name = "variant_name")
     private String variantName;
@@ -44,17 +44,21 @@ public class WidgetVariant {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "widgetMetrics_id")
+    private WidgetMetrics widgetMetrics;
 
-    public WidgetVariant(Long id, Widget widget, Color color, WidgetMetrics widgetMetrics, String variantName, String imageUrl, int price, LocalDateTime createdAt, LocalDateTime updatedAt) {
+
+    public WidgetVariant(Long id, Widget widget, Color color, String variantName, String imageUrl, int price, LocalDateTime createdAt, LocalDateTime updatedAt, WidgetMetrics widgetMetrics) {
         this.id = id;
         this.widget = widget;
         this.color = color;
-        this.widgetMetrics = widgetMetrics;
         this.variantName = variantName;
         this.imageUrl = imageUrl;
         this.price = price;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.widgetMetrics = widgetMetrics;
     }
 
 
@@ -85,13 +89,6 @@ public class WidgetVariant {
         this.color = color;
     }
 
-    public WidgetMetrics getWidgetMetrics() {
-        return widgetMetrics;
-    }
-
-    public void setWidgetMetrics(WidgetMetrics widgetMetrics) {
-        this.widgetMetrics = widgetMetrics;
-    }
 
     public String getVariantName() {
         return variantName;
@@ -131,6 +128,22 @@ public class WidgetVariant {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public int getVariantQuantity() {
+        return variantQuantity;
+    }
+
+    public void setVariantQuantity(int variantQuantity) {
+        this.variantQuantity = variantQuantity;
+    }
+
+    public WidgetMetrics getWidgetMetrics() {
+        return widgetMetrics;
+    }
+
+    public void setWidgetMetrics(WidgetMetrics widgetMetrics) {
+        this.widgetMetrics = widgetMetrics;
     }
 
     @PrePersist

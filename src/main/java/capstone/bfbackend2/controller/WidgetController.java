@@ -2,9 +2,16 @@ package capstone.bfbackend2.controller;
 
 import capstone.bfbackend2.Widget;
 import capstone.bfbackend2.service.WidgetService;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 @RestController
@@ -19,8 +26,27 @@ public class WidgetController {
     }
 
 
-    @PostMapping
-    public Widget createWidget(@RequestBody Widget widget){
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public Widget createWidget(
+            @RequestPart("widget") Widget widget,
+            @RequestPart(value = "imageFile", required = false) MultipartFile imageFile
+    ) {
+        if (imageFile != null && !imageFile.isEmpty()) {
+            try {
+
+                String fileName = System.currentTimeMillis() + "_" + imageFile.getOriginalFilename();
+                Path uploadPath = Paths.get("uploads/");
+                Files.createDirectories(uploadPath);
+
+                Path filePath = uploadPath.resolve(fileName);
+                Files.copy(imageFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+                widget.setImage_url("/uploads/" + fileName);
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to save image file", e);
+            }
+        }
+
         return widgetService.saveWidget(widget);
     }
 
@@ -31,6 +57,7 @@ public class WidgetController {
                 .toList();
 
     }
+
 
     @GetMapping("/{id}")
     public Widget getWidgetById(@PathVariable Long id){

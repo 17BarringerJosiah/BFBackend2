@@ -2,6 +2,8 @@ package capstone.bfbackend2;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "color")
 public class Color {
@@ -18,6 +20,9 @@ public class Color {
     @Column(name = "color_hex", nullable = false, length = 7)
     private String colorHex;
 
+    @OneToMany(mappedBy = "color", cascade = CascadeType.ALL)
+    private List<WidgetVariant> variants;
+
     public Color(Long color_id, String colorCode, String colorLabel, String colorHex) {
         this.color_id = color_id;
         this.colorCode = colorCode;
@@ -26,10 +31,6 @@ public class Color {
     }
 
     public Color() {
-        this.color_id = 0L;
-        this.colorCode = "";
-        this.colorLabel = "";
-        this.colorHex = "";
     }
 
     //Setter and Getter

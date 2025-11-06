@@ -46,9 +46,10 @@ public class Widget {
     @JoinColumn(name = "lifecycle_status_id")
     private LifecycleStatus lifecycleStatus;
 
-    @OneToMany(mappedBy = "widget", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
+    @OneToMany(mappedBy = "widget", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<WidgetVariant> variants;
+
 
 //Constructors
     public Widget(Long id, String widget_name, String slug, String blurb, String image_url, LocalDateTime createdAt, LocalDateTime updatedAt, int price, Color color, WidgetMetrics widgetMetrics, LifecycleStatus lifecycleStatus) {
@@ -66,14 +67,7 @@ public class Widget {
     }
 
     public Widget() {
-        this.id = 0L;
-        this.widget_name = "";
-        this.slug = "";
-        this.blurb = "";
-        this.image_url = "";
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
-        this.price = 0;
+
     }
 
 
@@ -141,6 +135,14 @@ public class Widget {
 
     public void setPrice(int price) {
         this.price = price;
+    }
+
+    public List<WidgetVariant> getVariants() {
+        return variants;
+    }
+
+    public void setVariants(List<WidgetVariant> variants) {
+        this.variants = variants;
     }
 
     public Color getColor() { return color; }

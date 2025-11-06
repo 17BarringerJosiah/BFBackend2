@@ -3,6 +3,7 @@ package capstone.bfbackend2;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
 @Table(name = "widget_metrics")
@@ -12,21 +13,25 @@ public class WidgetMetrics {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long widgetMetrics_id;
 
-    @Column(name = "quantity")
-    private int quantity;
+    @Column(name = "total_quantity")
+    private int totalQuantity;
 
     @Column(name = "usefulness_rating", precision = 5, scale = 1)
     private BigDecimal usefulnessRating;
 
-    public WidgetMetrics(Long widgetMetrics_id, int quantity, BigDecimal usefulnessRating) {
+    @OneToMany(mappedBy = "widgetMetrics")
+    private List<WidgetVariant> variants;
+
+
+    public WidgetMetrics(Long widgetMetrics_id, int totalQuantity, BigDecimal usefulnessRating) {
         this.widgetMetrics_id = widgetMetrics_id;
-        this.quantity = quantity;
+        this.totalQuantity = totalQuantity;
         this.usefulnessRating = usefulnessRating;
     }
 
     public WidgetMetrics() {
         this.widgetMetrics_id = 0L;
-        this.quantity = 0;
+        this.totalQuantity = 0;
         this.usefulnessRating = BigDecimal.valueOf(0.0);
     }
 
@@ -42,12 +47,12 @@ public class WidgetMetrics {
         this.widgetMetrics_id = widgetMetrics_id;
     }
 
-    public int getQuantity() {
-        return quantity;
+    public int getTotalQuantity() {
+        return totalQuantity;
     }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
+    public void setTotalQuantity(int totalQuantity) {
+        this.totalQuantity = totalQuantity;
     }
 
     public BigDecimal getUsefulnessRating() {
